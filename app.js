@@ -2,13 +2,14 @@
  * @Description: 入口文件
  * @Author: QingTong
  * @Date: 2019-02-01 15:10:11
- * @Last Modified by: QingTong
- * @Last Modified time: 2019-02-01 16:22:14
+ * @Last Modified by: qingtong
+ * @Last Modified time: 2019-02-05 21:49:23
  */
 
 const Koa = require('koa');
 const config = require('./config');
 const mongoose = require('mongoose');
+const bodyParser = require('koa-bodyparser'); //解析url传参
 
 const app = new Koa();
 mongoose.connect(config.db, { useNewUrlParser: true }, err => {
@@ -18,6 +19,7 @@ mongoose.connect(config.db, { useNewUrlParser: true }, err => {
     console.log('Connecting database successfully');
   }
 });
+app.use(bodyParser());
 
 const example_router = require('./routes/api/example_router');
 app.use(example_router.routes()).use(example_router.allowedMethods());

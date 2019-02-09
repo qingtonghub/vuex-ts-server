@@ -3,7 +3,7 @@
  * @Author: QingTong
  * @Date: 2019-02-01 15:10:11
  * @Last Modified by: qingtong
- * @Last Modified time: 2019-02-05 21:49:23
+ * @Last Modified time: 2019-02-09 11:01:17
  */
 
 const Koa = require('koa');
@@ -22,7 +22,9 @@ mongoose.connect(config.db, { useNewUrlParser: true }, err => {
 app.use(bodyParser());
 
 const example_router = require('./routes/api/example_router');
+const user_router = require('./routes/api/user_router');
 app.use(example_router.routes()).use(example_router.allowedMethods());
+app.use(user_router.routes()).use(user_router.allowedMethods());
 app.listen(config.port);
 
 

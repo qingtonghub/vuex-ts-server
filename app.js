@@ -3,7 +3,14 @@
  * @Author: QingTong
  * @Date: 2019-02-01 15:10:11
  * @Last Modified by: qingtong
- * @Last Modified time: 2019-02-09 11:01:17
+ * @Last Modified time: 2019-02-11 14:47:35
+ */
+
+/**
+ * 返回数据统一
+ * @param Success 成功与否
+ * @param Msg  信息提示
+ * @param Data 返回数据
  */
 
 const Koa = require('koa');

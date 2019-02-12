@@ -3,7 +3,7 @@
  * @Author: qingtong 
  * @Date: 2019-02-09 10:51:29 
  * @Last Modified by: qingtong
- * @Last Modified time: 2019-02-11 14:47:48
+ * @Last Modified time: 2019-02-12 20:07:45
  */
 
 
@@ -66,7 +66,7 @@ const login = async (ctx, next) => {
             });
             // hash对比密码
             const match = await passport.validate(req.password, pass.hash);
-            console.log('match====' + match);
+            // console.log('match====' + match);
             if(!match) {
                 data.Msg = '手机号密码错误';
             } else {
@@ -81,8 +81,105 @@ const login = async (ctx, next) => {
     ctx.body = data;
 }
 
+// 注册
+const register = async (ctx, next) => {
+    const req = ctx.request.body;
+    const data = {
+        Success: false,
+        Msg: '',
+        Data: null
+    };
+    if(!req.phone || !req.password) {
+        data.Msg = '手机号密码不能为空';
+    } else {
+        // 通过手机号获取user
+        const user = await User_col.findOne({
+            phone: req.phone
+        });
+        // console.log(user)
+        if (user) {
+            data.Msg = '该手机已经注册';
+        } else {
+            // 插入新用户
+            const userId = uuidv1();
+            const newUser = await User_col.create({
+                userId,
+                phone: req.phone
+            });
+            if (newUser) {
+                // 加密
+                const hash = await passport.encrypt(req.password, config.saltTimes);
+                const result = await Passport_col.create({
+                    userId: userId,
+                    hash
+                });
+                if (result) {
+                    data.Success = true;
+                    data.Msg = '';
+                    data.Data = {
+                        userId: newUser.userId,
+                        phone: newUser.phone
+                    };
+                } else {
+                    data.Msg = '注册失败！';
+                }
+            } else {
+                data.Msg = '注册失败！';
+            }
+        }
+    }
+    ctx.status = 200;
+    ctx.body = data;
+}
+
+// 重置密码
+const reset = async (ctx, next) => {
+    const req = ctx.request.body;
+    const data = {
+        Success: false,
+        Msg: '',
+        Data: null
+    };
+    if (!req.phone || !req.password) {
+        data.Msg = '手机号密码不能为空';
+    } else {
+        // 通过手机号获取user
+        const user = await User_col.findOne({
+            phone: req.phone
+        });
+        // console.log(user)
+        if (!user) {
+            data.Msg = '数据库无该手机号';
+        } else {
+            const userId = user.userId;
+            console.log(userId);
+            // 加密
+            const hash = await passport.encrypt(req.password, config.saltTimes);
+            // 通过userId修改数据库Password表中的 hash
+            const result = await Passport_col.update({
+                userId
+            }, {
+                $set: {
+                    hash
+                }
+            });
+            if (result) { 
+                data.Success = true;
+                data.Msg = '';
+                data.Data = null;
+            } else {
+                data.Msg = '重置密码失败';
+            }
+        }
+    }
+    ctx.status = 200;
+    ctx.body = data;
+}
+
 module.exports = {
     get,
     post,
-    login
+    login,
+    register,
+    reset
 }

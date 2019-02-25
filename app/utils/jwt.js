@@ -3,7 +3,7 @@
  * @Author: qingtong
  * @Date: 2019-02-14 22:23:55
  * @Last Modified by: qingtong
- * @Last Modified time: 2019-02-14 22:33:19
+ * @Last Modified time: 2019-02-25 22:57:46
  */
 
 const jwt = require('jsonwebtoken');
@@ -41,4 +41,10 @@ class Jwt {
   }
 }
 
-module.exports = Jwt;
+const jj = new Jwt({
+  userId: 'xxxxasdgdfg',
+});
+const token = jj.generateToken();
+console.log(token);
+
+// module.exports = Jwt;

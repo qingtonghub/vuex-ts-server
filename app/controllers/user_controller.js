@@ -3,7 +3,7 @@
  * @Author: qingtong 
  * @Date: 2019-02-09 10:51:29 
  * @Last Modified by: qingtong
- * @Last Modified time: 2019-02-14 22:32:47
+ * @Last Modified time: 2019-02-15 11:57:00
  */
 
 
@@ -72,12 +72,12 @@ const login = async (ctx, next) => {
             if(!match) {
                 data.Msg = '手机号密码错误';
             } else {
-                const jwt = new JwtUtil(userId);
-                const token = jwt.generateToken();
+                // const jwt = new JwtUtil(userId);
+                // const token = jwt.generateToken();
                 data.Success = true;
                 data.Msg = '';
                 data.Data = {
-                    token
+                    userId
                 };
             }
             // console.log('pass====:'+pass);
